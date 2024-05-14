@@ -6,7 +6,7 @@
 /*   By: hawild <hawild@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 15:57:06 by hawild            #+#    #+#             */
-/*   Updated: 2024/05/10 13:02:31 by hawild           ###   ########.fr       */
+/*   Updated: 2024/05/14 12:55:35 by hawild           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	sa(t_list **stack_a)
 {
 	if (swap(stack_a) != 0)
 		return (-1);
+	write(1, "sa\n", 3);
 	return (0);
 }
 
@@ -51,6 +52,7 @@ int	sb(t_list **stack_b)
 {
 	if (swap(stack_b) != 0)
 		return (-1);
+	write(1, "sb\n", 3);
 	return (0);
 }
 
@@ -58,6 +60,7 @@ int	ss(t_list **stack_a, t_list **stack_b)
 {
 	if (swap(stack_a) != 0 || swap(stack_b) != 0)
 		return (-1);
+	write(1, "ss\n", 3);
 	return (0);
 }
 
@@ -85,6 +88,7 @@ int ra(t_list **stack_a)
 {
 	if (rotate(stack_a) != 0)
 		return (-1);
+	write(1, "ra\n", 3);
 	return (0);
 }
 
@@ -92,6 +96,7 @@ int rb(t_list **stack_b)
 {
 	if (rotate(stack_b) != 0)
 		return (-1);
+	write(1, "rb\n", 3);
 	return (0);
 }
 
@@ -99,6 +104,7 @@ int	rr(t_list **stack_a, t_list **stack_b)
 {
 	if (rotate(stack_a) != 0 || rotate(stack_b) != 0)
 		return (-1);
+	write(1, "rr\n", 3);
 	return (0);
 }
 
@@ -126,6 +132,7 @@ int	rrr(t_list **stack_a, t_list **stack_b)
 {
 	if (rrotate(stack_a) != 0 || rrotate(stack_b) != 0)
 		return (-1);
+	write(1, "rrr\n", 4);
 	return (0);
 }
 
@@ -133,6 +140,7 @@ int rra(t_list **stack_a)
 {
 	if (rrotate(stack_a) != 0)
 		return (-1);
+	write(1, "rra\n", 4);
 	return (0);
 }
 
@@ -140,6 +148,7 @@ int rrb(t_list **stack_b)
 {
 	if (rrotate(stack_b) != 0)
 		return (-1);
+	write(1, "rrb\n", 4);
 	return (0);
 }
 
@@ -175,6 +184,7 @@ int	pa(t_list **stack_a, t_list **stack_b)
 {
 	if (push(stack_b, stack_a) != 0)
 		return (-1);
+	write(1, "pa\n", 3);
 	return (0);
 }
 
@@ -182,5 +192,6 @@ int	pb(t_list **stack_a, t_list **stack_b)
 {
 	if (push(stack_a, stack_b) != 0)
 		return (-1);
+	write(1, "pb\n", 3);
 	return (0);
 }
