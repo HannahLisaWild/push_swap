@@ -455,7 +455,7 @@ float   calculate_mean_val(t_list **stack_a, float lst_size)
     return (mean / lst_size);
 }
 
-int main_algorithm(t_list **stack_a, t_list **stack_b)
+int sort_till_5_in_A(t_list **stack_a, t_list **stack_b)
 {
     float lst_size;
     float mean;
@@ -465,6 +465,8 @@ int main_algorithm(t_list **stack_a, t_list **stack_b)
     while (lst_size > 5 && (*stack_a)->next != NULL)
     {
         mean = calculate_mean_val(stack_a, lst_size);
+		printf("mean value: %f\n", mean);
+		printf("lst size: %f\n", lst_size);
         if ((*stack_a)->value < mean)
         {
             i = pb(stack_a, stack_b);
@@ -477,6 +479,83 @@ int main_algorithm(t_list **stack_a, t_list **stack_b)
     }
     return (0);
 }
+
+void	free_stack(t_list **stack)
+{
+	t_list *current;
+	t_list *temp;
+	float	lst_size;
+
+	current = *stack;
+	lst_size = ft_lstsize(*stack);
+	while (lst_size >= 0)
+	{
+		temp = current;
+		current = current->next;
+		free(temp);
+		lst_size--;
+	}
+	free(stack);
+}
+
+typedef struct s_list_bf 
+{
+    int bf_current;
+    int nbr_current;
+	int	moves_total_current;
+    int bf_moves_to_top;
+    int nbr_moves_to_top;
+	int bf_final;
+	int nbr_final;
+    int moves_total_final;
+	int	flag;
+    struct s_list_bf *next;
+}            t_list_bf;
+
+
+int	calculate_bf(t_list **stack_a, t_list **stack_b)
+{
+	t_list_bf *bf;
+	int	nbr_b;
+	t_list	*head_a;
+	float	lst_size;
+
+	bf = NULL;
+	nbr_b = (*stack_b)->value;
+	head_a = *stack_a;
+	bf->flag = 1;
+	lst_size = ft_lstsize(*stack_a);
+	while (lst_size >= 0)
+	{
+		bf->bf_current = (head_a->value - nbr_b);
+		if (bf->flag == 1)
+		{
+			bf->bf_final = bf->bf_current;
+			bf->flag = 0;
+		}
+		
+		lst_size--;
+	}
+}
+
+int main_algorithm(t_list **stack_a, t_list **stack_b)
+{
+    int i;
+	t_list *temp_stack;
+    
+	temp_stack = NULL;
+    i = sort_till_5_in_A(stack_a, stack_b);
+	printf("stack after sort till 5\n");
+	printf("stack a : \n");
+	print_list(*stack_a);
+	printf("stack b : \n");
+	print_list(*stack_b);
+	printf("now comes sort_5:\n");
+    i = sort_5(stack_a, &temp_stack);
+	free(temp_stack);
+	return (i);
+}
+//why doesnt it work without temp (with stack_b?)
 
 int main(int ac, char **av)
 {
@@ -494,108 +573,11 @@ int main(int ac, char **av)
 	printf("stack b : \n");
 	print_list(stack_b);
     i = main_algorithm(&stack_a, &stack_b);
+	printf("main algo executed\n");
     printf("stack a : \n");
 	print_list(stack_a);
 	printf("stack b : \n");
 	print_list(stack_b);
-	// int i = push(&stack_a, &stack_b);
-	// printf("push executed\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = push(&stack_a, &stack_b);
-	// printf("push executed\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = pa(&stack_a, &stack_b);
-	// printf("pa executed\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = pb(&stack_a, &stack_b);
-	// printf("pb executed\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = sa(&stack_a);
-	// printf("sa executed!\n");
-	// print_list(stack_a);
-	// i = ra(&stack_a);
-	// printf("ra executed!\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// i = rr(&stack_a);
-	// printf("rr executed\n");
-	// print_list(stack_a);
-	// i = rrotate(&stack_a);
-	// printf("rrotate executed!\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// i = pb(&stack_a, &stack_b);
-	// i = pb(&stack_a, &stack_b);
-	// i = pb(&stack_a, &stack_b);
-	// printf("pb executed 3 times\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = ss(&stack_a, &stack_b);
-	// printf("ss\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = sa(&stack_a);
-	// printf("sa\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// i = sb(&stack_b);
-	// printf("sb\n");
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = ra(&stack_a);
-	// printf("ra executed\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// i = rb(&stack_b);
-	// printf("rb executed\n");
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = rr(&stack_a, &stack_b);
-	// printf("rr\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = rra(&stack_a);
-	// printf("rra executed\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// i = rrb(&stack_b);
-	// printf("rrb executed\n");
-	// printf("stack b : \n");
-	// print_list(stack_b);
-	// i = rrr(&stack_a, &stack_b);
-	// printf("rrr\n");
-	// printf("stack a : \n");
-	// print_list(stack_a);
-	// printf("stack b : \n");
-	// print_list(stack_b);
 
-	t_list *current = stack_a;
-	t_list *temp;
-	i = 0;
-	while (current != NULL && i < 4)
-	{
-		temp = current;
-		current = current->next;
-		free(temp);
-		i++;
-	} 
 	return (0);
 }
