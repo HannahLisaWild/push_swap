@@ -44,6 +44,134 @@ typedef struct s_list_bf
     int    moves_rrb_final;
 }            t_list_bf;
 
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
+}
+
+size_t	ft_strlcpy(char *dest, const char *src, size_t n)
+{
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = ft_strlen(src);
+	if (n == 0)
+		return (len);
+	if (n != 0)
+	{
+		while (src[i] != '\0' && i < (n - 1))
+		{
+			dest[i] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
+	}
+	return (len);
+}
+
+
+
+static char	**ft_error(char **tab)
+{
+	size_t	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+	return (NULL);
+}
+
+static size_t	ft_word_count(char const *s, char c)
+{
+	size_t	i;
+	size_t	nb_words;
+
+	if (!s[0])
+		return (0);
+	i = 0;
+	nb_words = 0;
+	while (s[i] && s[i] == c)
+		i++;
+	while (s[i])
+	{
+		if (s[i] == c)
+		{
+			nb_words++;
+			while (s[i] && s[i] == c)
+				i++;
+			continue ;
+		}
+		i++;
+	}
+	if (s[i - 1] != c)
+		nb_words++;
+	return (nb_words);
+}
+
+static void	ft_next_word(char **next_word, size_t *next_word_len, char c)
+{
+	size_t	i;
+
+	*next_word += *next_word_len;
+	*next_word_len = 0;
+	i = 0;
+	while (**next_word && **next_word == c)
+		(*next_word)++;
+	while ((*next_word)[i])
+	{
+		if ((*next_word)[i] == c)
+			return ;
+		(*next_word_len)++;
+		i++;
+	}
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**new;
+	char	*next_word;
+	size_t	next_word_len;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	new = (char **)malloc(sizeof(char *) * (ft_word_count(s, c) + 1));
+	if (!new)
+		return (NULL);
+	i = 0;
+	next_word = (char *)s;
+	next_word_len = 0;
+	while (i < ft_word_count(s, c))
+	{
+		ft_next_word(&next_word, &next_word_len, c);
+		new[i] = (char *)malloc(sizeof(char) * (next_word_len + 1));
+		if (!new[i])
+			return (ft_error(new));
+		ft_strlcpy(new[i], next_word, next_word_len + 1);
+		i++;
+	}
+	new[i] = NULL;
+	return (new);
+}
+
+void	error(void)
+{
+	write(1, "Error\n", 6);
+	exit(EXIT_FAILURE);
+}
+
+
 int	ft_atoi(const char *str)
 {
 	int				i;
@@ -71,6 +199,117 @@ int	ft_atoi(const char *str)
 	}
 	return (sign * nb);
 }
+
+int is_numeric(char *str)
+{
+    int i;
+
+    i = 0;
+    if (ft_atoi(str) < -2147483648 || ft_atoi(str) > 2147483647)
+        return (1);
+    if (str[i] == '+' || str[i] == '-')
+        i++;
+    while (str[i])
+    {
+        if (!(str[i] >= '0' && str[i] <= '9'))
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
+int check_for_doubles(char **str, char *s, int i)
+{
+    i++;
+    while (str[i])
+    {
+        if (ft_atoi(str[i]) == (ft_atoi(s)))
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
+void    free_args(char **args)
+{
+    int i;
+
+    i = 0;
+    while (args[i])
+    {
+        free(args[i]);
+        i++;
+    }
+    free(args);
+}
+
+void check_args(int ac, char **av)
+{
+    char **args; 
+    int i;
+
+    if (ac == 2)
+    {
+        i = 0;
+        args = ft_split(av[1], ' ');
+    }
+    else
+    {
+        i = 1;
+        args = av;
+    }
+    while (args[i])
+    {
+        if (is_numeric(args[i]) == 1)
+            error();
+        if (check_for_doubles(args, args[i], i) == 1)
+            error();
+        i++;
+    }
+    if (ac == 2)
+        free_args(args);
+}
+
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
+}
+
+// int	ft_atoi(const char *str)
+// {
+// 	int				i;
+// 	int				sign;
+// 	long long int	nb;
+
+// 	nb = 0;
+// 	sign = 1;
+// 	i = 0;
+// 	while ((str[i] == ' ' || str[i] == '\n' || str[i] == '\t'
+// 			|| str[i] == '\r' || str[i] == '\v' || str[i] == '\f'))
+// 	{
+// 		i++;
+// 	}
+// 	if (str[i] == '-')
+// 		sign = -1;
+// 	if (str[i] == '+' || str[i] == '-')
+// 	{
+// 		i++;
+// 	}
+// 	while (str[i] != '\0' && (str[i] >= '0' && str[i] <= '9'))
+// 	{
+// 		nb = nb * 10 + (str[i] - '0');
+// 		i++;
+// 	}
+// 	return (sign * nb);
+// }
 
 t_list	*ft_lstnew(int value)
 {
@@ -115,14 +354,30 @@ t_list	*put_in_stack(int ac, char **av)
 	t_list *head;
 	int i;
 	int value;
+	char **temp;
 
 	head = NULL;
-	i = 1;
-	while (i < ac)
+	if (ac == 2)
 	{
-		value = ft_atoi(av[i]);
-		ft_lstadd_back(&head, value);
-		i++;
+		temp = ft_split(av[1], ' ');
+		i = 0;
+		while (temp[i])
+		{
+			value = ft_atoi(temp[i]);
+			ft_lstadd_back(&head, value);
+			i++;
+		}
+		free_args(temp);
+	}
+	else
+	{
+		i = 1;
+		while (i < ac)
+		{
+			value = ft_atoi(av[i]);
+			ft_lstadd_back(&head, value);
+			i++;
+		}
 	}
 	return (head);
 }
@@ -509,58 +764,6 @@ int sort_till_5_in_A(t_list **stack_a, t_list **stack_b)
     return (0);
 }
 
-void	free_stack(t_list **stack)
-{
-	t_list *current;
-	t_list *temp;
-	float	lst_size;
-
-	current = *stack;
-	lst_size = ft_lstsize(*stack);
-	while (lst_size >= 0)
-	{
-		temp = current;
-		current = current->next;
-		free(temp);
-		lst_size--;
-	}
-	free(stack);
-}
-
-
-// int	calculate_bf(t_list **stack_a, t_list **stack_b, t_list_bf *bf)
-// {
-// 	t_list	*head_a;
-// 	float	lst_size;
-// 	int i;
-
-// 	printf("in calculate_bf funcion\n");
-// 	head_a = *stack_a;
-// 	printf("value of b at start: %i\n", bf->nbr_b);
-// 	printf("value of a at start: %i\n", head_a->value);
-// 	bf->bf_final_value = (head_a->value - bf->nbr_b);
-// 	printf("bf final value at beginning: %i\n", bf->bf_final);
-// 	head_a = head_a->next;
-// 	printf("value of a at beginning: %i\n", head_a->value);
-// 	lst_size = ft_lstsize(*stack_a);
-// 	i = 0;
-// 	while (i <= lst_size)
-// 	{
-// 		printf("in loop\n");
-// 		printf("value of b: %i\n", bf->nbr_b);
-// 		printf("value of a: %i\n", head_a->value);
-// 		bf->bf_current = head_a->value;
-// 		bf->bf_current_value = (head_a->value - bf->nbr_b);
-// 		if (bf->bf_current_value > 0 && bf->bf_current < bf->bf_final_value)
-// 		{
-// 			bf->bf_final = bf->bf_current;
-// 			bf->index_a = i;
-// 		}
-// 		head_a = head_a->next;
-// 		i++;;
-// 	}
-// 	return (bf->bf_final);
-// }
 
 int	calculation(t_list_bf *bf, int head_a_value)
 {
@@ -604,7 +807,6 @@ int	calculate_bf(t_list **stack_a, t_list **stack_b, t_list_bf *bf)
 		bf->bf_final = bf->bf_current;
 		bf->index_a = i;
 	}
-	printf(RED"for B: %i bf final : %i index: %i\n"RESET, bf->nbr_b,  bf->bf_final, bf->index_a);
 	return (bf->bf_final);
 }
 
@@ -614,15 +816,11 @@ int	costs_a(t_list **stack_a, t_list_bf *bf)
 	int	i;
 
 	lst_size_a = ft_lstsize(*stack_a);
-	printf(YELLOW"list size a : %f\n"RESET, lst_size_a);
 	bf->moves_rra = 0;
 	bf->moves_ra = 0;
 	if ((int)lst_size_a % 2 == 0)
 	{
-		printf(YELLOW"in first if A\n"RESET);
 		i = (int)lst_size_a / 2;
-		printf(YELLOW" i in a: %i\n"RESET, i);
-		printf(BLUE"index a :%i\n"RESET, bf->index_a);
 		if (bf->index_a <= i)
 			bf->moves_ra = bf->index_a - 1;
 		else if (bf->index_a > i)
@@ -630,16 +828,12 @@ int	costs_a(t_list **stack_a, t_list_bf *bf)
 	}
 	else if ((int)lst_size_a % 2 != 0)
 	{
-		printf(YELLOW"in second if A\n"RESET);
 		i = ((int)lst_size_a + 1) / 2;
-		printf(YELLOW" i in a: %i\n"RESET, i);
-		printf(BLUE"index a :%i\n"RESET, bf->index_a);
 		if (bf->index_a < i)
 			bf->moves_ra = bf->index_a - 1;
 		else if (bf->index_a >= i)
 			bf->moves_rra = ((lst_size_a - bf->index_a) + 1);
 	}
-	printf("moves a: %i\n", bf->moves_rra + bf->moves_ra);
 	return (bf->moves_rra + bf->moves_ra);
 }
 
@@ -649,16 +843,12 @@ int	costs_b(t_list **stack_b, t_list_bf *bf)
 	int	i;
 
 	lst_size_b = ft_lstsize(*stack_b);
-	printf(GREEN" list size b: %f\n"RESET, lst_size_b);
 	bf->moves_rb = 0;
 	bf->moves_rrb = 0;
 	bf->moves_pa = 1;
 	if ((int)lst_size_b % 2 == 0)
 	{
-		printf("in first if statement\n");
 		i = (int)lst_size_b / 2;
-		printf(GREEN" i in b: %i\n"RESET, i);
-		printf(BLUE"index b : %i\n"RESET, bf->index_b);
 		if (bf->index_b <= i)
 			bf->moves_rb = bf->index_b - 1;
 		else if (bf->index_b > i)
@@ -666,16 +856,12 @@ int	costs_b(t_list **stack_b, t_list_bf *bf)
 	}
 	else if ((int)lst_size_b % 2 != 0)
 	{
-		printf("in second if statement\n");
 		i = ((int)lst_size_b + 1) / 2;
-		printf(GREEN" i in b: %i\n"RESET, i);
-		printf(BLUE"index b : %i\n"RESET, bf->index_b);
 		if (bf->index_b <= i)
 			bf->moves_rb = bf->index_b - 1;
 		else if (bf->index_b > i)
 			bf->moves_rrb = ((lst_size_b - bf->index_b) + 1);
 	}
-	printf("moves b: %i\n", bf->moves_rrb + bf->moves_rb + bf->moves_pa);
 	return (bf->moves_rrb + bf->moves_rb + bf->moves_pa);
 }
 
@@ -683,9 +869,7 @@ int	costs(t_list **stack_a, t_list **stack_b, t_list_bf *bf)
 {
 	int	costs;
 
-	printf("IN COSTS FUNCTION \n");
 	costs = (costs_a(stack_a, bf) + costs_b(stack_b, bf));
-	//printf(GREEN"costs for a: %i costs for b: %i\n"RESET, costs_a(stack_a, bf), costs_b(stack_b, bf));
 	return (costs);
 }
 
@@ -706,7 +890,6 @@ void	execute_cheapest_a(t_list **stack_a, t_list_bf *bf)
 	{
 		while (bf->moves_rra_final != 0)
 		{
-			printf(CYAN"IN RRA"RESET);
 			i = rra(stack_a);
 			bf->moves_rra_final--;
 		}
@@ -755,17 +938,12 @@ int	best_friend(t_list **stack_a, t_list **stack_b)
         return (0);
 	head_b = *stack_b;
 	bf->nbr_b = head_b->value;
-	printf("in best_friend funcion\n");
 	bf->nbr_a_final = calculate_bf(stack_a, stack_b, bf);
 	bf->nbr_b_final = bf->nbr_b;
 	bf->index_b_final = 1;
 	bf->index_b = 1;
-	printf("first time calculate_bf () executed\n\n\n\n");
 	bf->costs_final = costs(stack_a, stack_b, bf);
 	set_final_moves(bf);
-	printf(CYAN" rra : %i\n"RESET, bf->moves_rra);
-	printf(CYAN" rra final : %i\n"RESET, bf->moves_rra_final);
-	printf("for B: %i bf of a : %i final costs: %i\n", bf->nbr_b, bf->bf_final, bf->costs_final);
 	head_b = head_b->next;
 	bf->index_b = 2;
 	while (head_b != NULL)
@@ -775,22 +953,17 @@ int	best_friend(t_list **stack_a, t_list **stack_b)
 		bf->costs_current = costs(stack_a, stack_b, bf);
 		if (bf->costs_final > bf->costs_current)
 		{
-			printf("NEW CHEAPEST FOUND\n");
 			bf->nbr_a_final = bf->bf_current;
-			printf("new bf final is: %i\n", bf->bf_final);
 			bf->costs_final = bf->costs_current;
 			bf->nbr_b_final = bf->nbr_b;
 			bf->index_b_final = bf->index_b;
 			set_final_moves(bf);
-			printf("final rrb: %i\n", bf->moves_rrb_final);
 		}
 		head_b = head_b->next;
 		bf->index_b++;
 	}
-	printf("rrb final? : %i\n", bf->moves_rrb_final);
 	execute_cheapest_a(stack_a, bf);
 	execute_cheapest_b(stack_a, stack_b, bf);
-	printf("final B: %i bf of final a : %i final final costs: %i\n", bf->nbr_b_final, bf->nbr_a_final, bf->costs_final);
 	free(bf);
 	return (0);
 }
@@ -805,7 +978,6 @@ void	final_rotate(t_list **stack_a)
 	index = 1;
 	head = *stack_a;
 	min = get_min(stack_a);
-	printf("in rotate \n");
 	while (head->next != NULL)
 	{
 		if (head->value == min->value)
@@ -813,18 +985,9 @@ void	final_rotate(t_list **stack_a)
 		head = head->next;
 		index++;
 	}
-	lst_size = ft_lstsize(*stack_a);
-	printf("lst size: %f\n", lst_size);
-	// if ((int)lst_size % 2 == 0)
-	// {
-	// 	if (((int)lst_size / 2) <= i)
-	// }
-	lst_size = lst_size / 2;
-	printf("lst size: %i\n", (int)lst_size);
-	printf("index: %i\n", index);
+	lst_size = (ft_lstsize(*stack_a)) / 2;
 	if ((int)lst_size >= index)
 	{
-		printf("in while loop 1\n");
 		while (index != 1)
 		{
 			ra(stack_a);
@@ -833,7 +996,6 @@ void	final_rotate(t_list **stack_a)
 	}
 	else
 	{
-		printf("in while loop 2\n");
 		while (index != (lst_size * 2))
 		{
 			rra(stack_a);
@@ -843,59 +1005,101 @@ void	final_rotate(t_list **stack_a)
 	}
 }
 
-int main_algorithm(t_list **stack_a, t_list **stack_b)
+int	small_sort(t_list **stack_a, t_list **stack_b)
 {
-    int i;
-	float lst_size_b;
+	float lst_size_a;
 
-    i = sort_till_5_in_A(stack_a, stack_b);
-	printf("stack after sort till 5\n");
-	printf("stack a : \n");
-	print_list(*stack_a);
-	printf("stack b : \n");
-	print_list(*stack_b);
-	printf("now comes sort_5:\n");
-    i = sort_5(stack_a, stack_b);
-	printf("stack a : \n");
-	print_list(*stack_a);
-	printf("stack b : \n");
-	print_list(*stack_b);
-	printf("about to execute best friend ()\n");
-	
-	while ((int)(lst_size_b = ft_lstsize(*stack_b)) != 0)
-	{	
-		i = best_friend(stack_a, stack_b);
-	}
-	printf("before final rotate\n");
-    printf("stack a : \n");
-	print_list(*stack_a);
-	printf("stack b : \n");
-	print_list(*stack_b);
-	final_rotate(stack_a);
-	return (i);
+	if ((lst_size_a = ft_lstsize(*stack_a)) == 2)
+		sort_2(stack_a);
+	else if ((lst_size_a = ft_lstsize(*stack_a)) == 3)
+		sort_3(stack_a);
+	else if ((lst_size_a = ft_lstsize(*stack_a)) == 4)
+		sort_4(stack_a, stack_b);
+	else
+		sort_5(stack_a, stack_b);
+	return (0);
 }
 
-int main(int ac, char **av)
+int	sorted(t_list **stack_a)
+{
+	t_list *head;
+	int	i;
+	float list_size;
+
+	i = 1;
+	head = *stack_a;
+	while (head->next != NULL)
+	{
+		if (head->value < head->next->value)
+			i++;
+		head = head->next;
+	}
+	list_size = ft_lstsize(*stack_a);
+	if ((int)list_size == i)
+		return (0);
+	return (-1);
+}
+
+int	sort_stack(t_list **stack_a, t_list **stack_b)
+{
+	float lst_size_b;
+	float lst_size_a;
+
+	if ((lst_size_a = ft_lstsize(*stack_a)) <= 5)
+		small_sort(stack_a, stack_b);
+	else
+	{
+		while (sorted(stack_a) != 0)
+		{
+			sort_till_5_in_A(stack_a, stack_b);
+    		sort_5(stack_a, stack_b);
+			while ((int)(lst_size_b = ft_lstsize(*stack_b)) != 0)
+			{	
+				best_friend(stack_a, stack_b);
+			}
+			final_rotate(stack_a);
+		}
+	}
+	return (0);
+}
+
+void	free_stack(t_list **stack)
+{
+	t_list *current;
+	t_list *temp;
+	float	lst_size;
+
+	current = *stack;
+	lst_size = ft_lstsize(*stack);
+	while (lst_size > 0)
+	{
+		temp = current;
+		current = current->next;
+		free(temp);
+		lst_size--;
+	}
+	free(current);
+}
+
+int	main(int ac, char **av)
 {
 	t_list *stack_a;
 	t_list *stack_b;
-	int	i;
 
 	stack_a = NULL;
 	stack_b = NULL;
-
+	if (ac < 2)
+		error();
+	check_args(ac, av);
 	stack_a = put_in_stack(ac, av);
-    printf("stack a created with arguments\n");
-	printf("stack a : \n");
-	print_list(stack_a);
-	printf("stack b : \n");
-	print_list(stack_b);
-    i = main_algorithm(&stack_a, &stack_b);
-	printf("main algo executed\n");
-    printf("stack a : \n");
-	print_list(stack_a);
-	printf("stack b : \n");
-	print_list(stack_b);
-
+	if (sorted(&stack_a) == 0)
+	{
+		free_stack(&stack_a);
+		free_stack(&stack_b);
+		return (0);
+	}
+	sort_stack(&stack_a, &stack_b);
+	free_stack(&stack_a);
+	free_stack(&stack_b);
 	return (0);
 }
