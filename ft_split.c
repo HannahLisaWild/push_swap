@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hawild <hawild@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 13:10:09 by hawild            #+#    #+#             */
-/*   Updated: 2024/04/22 12:52:24 by hawild           ###   ########.fr       */
+/*   Created: 2024/07/16 11:37:52 by hawild            #+#    #+#             */
+/*   Updated: 2024/07/17 12:22:17 by hawild           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
 static char	**ft_error(char **tab)
 {
@@ -98,67 +98,3 @@ char	**ft_split(char const *s, char c)
 	new[i] = NULL;
 	return (new);
 }
-
-/*int	main(void)
-{
-	char	**tabstr;
-	if (!(tabstr = ft_split("", 'z')))
-		printf("NULL");
-	else
-		if (!tabstr[0])
-			printf("ok\n");
-	return (0);
-}*/
-/*
-int	main(void)
- {
-	// Example string
-	char input[] = "This is a test string";
-
-	// Character to split on
-	char delimiter = ' ';
-
-	// Call ft_split
-	char **result = ft_split(input, delimiter);
-
-	// Check if ft_split was successful
-	if (result == NULL) {
-		printf("ft_split failed\n");
-		return (1);
-	}
-
-	// Print the 2D array
-	int i = 0;
-	while (result[i] != NULL)
-	{
-		printf("%s\n", result[i]);
-		i++;
-	}
-
-	// Free the allocated memory
-	i = 0;
-	while (result[i] != NULL)
-	{
-		free(result[i]);
-		i++;
-	}
-	free(result);
-
-	return (0);
-}*/
-
-/*int main()
-{
-	char	*s = "      split       this for   me  !       ";
-	char	**result = ft_split(s, ' ');
-	char	**expected = (char*[6]){"split", "this", "for", "me", "!", NULL};
-	if (strcmp(*result, *expected) == 0)
-		printf("success");
-	printf("\n");
-	int i = 0;
-	while (result[i] != NULL)
-	{
-		printf("%s\n", result[i]);
-		i++;
-	}
-}*/
