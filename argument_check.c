@@ -6,7 +6,7 @@
 /*   By: hawild <hawild@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:51 by hawild            #+#    #+#             */
-/*   Updated: 2024/07/17 11:28:04 by hawild           ###   ########.fr       */
+/*   Updated: 2024/07/17 15:00:29 by hawild           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ static int	is_numeric(char *str)
 
 	i = 0;
 	if (ft_atoi(str) < INT_MIN || ft_atoi(str) > INT_MAX)
+		return (1);
+	if ((ft_atoi(str) < 0 && str[0] != '-') || (ft_atoi(str) > 0
+			&& str[0] == '-'))
 		return (1);
 	if (str[i] == '+' || str[i] == '-')
 		i++;

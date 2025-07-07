@@ -6,7 +6,7 @@
 /*   By: hawild <hawild@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:26:43 by hawild            #+#    #+#             */
-/*   Updated: 2024/07/17 12:20:19 by hawild           ###   ########.fr       */
+/*   Updated: 2024/07/17 17:02:35 by hawild           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ int	sort_till_5_in_a(t_list **stack_a, t_list **stack_b)
 		{
 			ra(stack_a);
 		}
+		else
+			ra(stack_a);
 	}
 	return (0);
 }
