@@ -26,6 +26,8 @@ To clean:
 make clean
 make fclean
 
+---
+
 ## 🚀 Usage
 Running the sorter:
 
