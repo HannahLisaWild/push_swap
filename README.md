@@ -28,7 +28,7 @@ make fclean
 
 ---
 
-## 🚀 Usage
+##  🚀 Usage
 Running the sorter:
 
 ./push_swap 3 2 1
