@@ -12,6 +12,16 @@ An algorithmic sorting project from the 42 curriculum. The goal is to sort a sta
 - Two stacks are used: **stack A** (initial input) and **stack B** (auxiliary).
 - You also write a **checker** program to validate move sequences.
 
+  🧠 Learning Outcomes
+
+    Algorithm design under constraints
+
+    Mastering stack-based data structures
+
+    Optimizing for performance and minimal instructions
+
+    Input parsing and error handling
+
 ---
 
 ## 📦 How to UsageCompile
@@ -26,9 +36,7 @@ To clean:
 make clean
 make fclean
 
----
-
-## 🚀 Usage
+ 🚀 Usage
 Running the sorter:
 
 ./push_swap 3 2 1
@@ -43,7 +51,7 @@ You can also provide inputs via quotes:
 ./push_swap "3 2 1"
 
 
-## 📚 Allowed Instructions
+ 📚 Allowed Instructions
 
 Only these stack operations are permitted:
 
@@ -55,12 +63,3 @@ Only these stack operations are permitted:
 
     rra, rrb, rrr – rotate stack down
 
-## 🧠 Learning Outcomes
-
-    Algorithm design under constraints
-
-    Mastering stack-based data structures
-
-    Optimizing for performance and minimal instructions
-
-    Input parsing and error handling
