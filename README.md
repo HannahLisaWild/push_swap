@@ -14,7 +14,7 @@ An algorithmic sorting project from the 42 curriculum. The goal is to sort a sta
 
 ---
 
-## 📦 How to Compile
+## 📦 How to UsageCompile
 
 ```bash
 make
@@ -28,7 +28,7 @@ make fclean
 
 ---
 
-##  🚀 Usage
+## 🚀 Usage
 Running the sorter:
 
 ./push_swap 3 2 1
